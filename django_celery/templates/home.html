@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>hellooooo</h1>
+    {% for new in news %}
+        {{new.title}}
+        {{new.link}}
+        {{new.published}}
+        {{new.source}}
+        <hr>
+    {% endfor %}
+{% endblock content %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block body %}
+{% if my_orders %}
+{% for order in my_orders %}
+    name product:<strong>{{order.name}}</strong>
+    numbers:<strong>{{order.number}}</strong>
+    price:<strong>{{order.price}}</strong>
+    total price:<strong>{{order.total_price}}</strong>
+
+    <a href="{% url 'post:delete' order.pk %}" class="btn btn-warning">delete</a>
+
+    <form action="{% url 'post:order_update' %}" method="POST">
+            {% csrf_token %}
+               <input name="post_id" type="number" value="{{ order.pk }}" hidden>
+        number:<input name="number" type="number" min="1" value="{{ order.number }}">
+        <button class="btn btn-info">update</button>
+    </form>
+    <hr>
+{% endfor %}
+
+<a href="{% url 'post:orders_delete' %}" class="btn btn-danger">delete orders</a>
+{% else %}
+<h1>orders is empty</h1>
+{% endif %}
+{% endblock %}

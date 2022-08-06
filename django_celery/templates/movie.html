@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    {% for movie in movies %}
+        {% if movie.mv_original %}
+            <video width="320" height="240" controls>
+                <source src="{{ movie.mv_original.url }}">
+            </video> <br>
+            {{movie.title}}
+            {{movie.mv_original.size | filesizeformat }}
+            {{ movie.filename  }}
+
+            <a href="{{movie.mv_original.url}}" download="">دانلود ویدیو</a>
+        {% endif %}
+        
+        {% if movie.audio %}
+            <audio controls>
+                <source src="{{ movie.audio.url }}">
+            </audio>
+        {% endif %}
+        <hr>
+    {% endfor %}
+{% endblock content %}

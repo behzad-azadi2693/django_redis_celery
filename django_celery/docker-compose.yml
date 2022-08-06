@@ -1,0 +1,87 @@
+version : '3.9'
+
+services:
+
+    postgres:
+        image: postgres
+        container_name: postgres-container
+        hostname: postgres
+        environment:
+            - POSTGRES_DB=web
+            - POSTGRES_USER=admin
+            - POSTGRES_PASSWORD=1234qwer
+        ports:
+            - 5432:5432
+        volumes:
+            - pgdata:/var/lib/postgresql/data/
+        restart: on-failure
+        networks:
+            - main
+
+    app:
+        build: .
+        container_name: app-container
+        hostname: app
+        image: app-image
+        ports:
+            - 8000:8000   
+        restart: on-failure
+        volumes:
+            - .:/code
+        command: bash -c " python manage.py makemigrations && python manage.py migrate && gunicorn -k gevent config.wsgi:application --bind 0.0.0.0:8000 "
+        depends_on:
+            - postgres
+            - rabbitmq
+        links: 
+            - rabbitmq
+        networks:
+            - main
+    
+    rabbitmq:
+        image: rabbitmq
+        container_name: rabbitmq-container
+        hostname: rabbitmq
+        ports:
+            - 5672:5672
+        networks:
+            - main
+
+    celery-worker:
+        build: .
+        container_name: celery-worker-container
+        hostname: celery_worker
+        command: bash -c " celery -A config worker -l info "
+        restart: on-failure
+        depends_on:
+            - app
+            - postgres
+            - rabbitmq
+        image: app-image
+        volumes:
+            - .:/code
+        links: 
+            - rabbitmq
+        networks:
+            - main
+
+    celery_beat:
+        command: bash -c " celery -A config beat -l info "
+        container_name: celery-beat-container
+        depends_on:
+          - app
+          - postgres
+          - rabbitmq
+        hostname: celery_beat
+        image: app-image
+        links: 
+            - rabbitmq
+        networks:
+          - main
+        restart: on-failure
+
+networks:
+  main:
+
+volumes:
+  pgdata:
+   

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+    <h1>{{post.name}}</h1>
+    <p>{{post.title}}</p>
+    <div>{{post.body}}</div>
+    <hr>
+
+    <form action="{% url 'post:order' %}" method="POST" class="w-25 p-3">
+        {% csrf_token %}
+
+        {{ form.post_id }}
+
+        number:{{ form.number }} <br>
+
+        <input type="submit" value="ordering" class="btn btn-info">
+    </form>
+
+    views: <h3>{{total_views}}</h3>
+    user_look: 
+    {% for user in onlin %}
+    <h3>{{ user }}</h3>
+    {% endfor %}
+{% endblock %}

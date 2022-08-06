@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    {% for inf in informations %}
+        <div class="bg-light">
+            <a href="{% url 'post:detail' inf.1 %}">{{inf.0.name}}-{{inf.0.title}}</a> <br>
+            <strong>total visit:{{inf.3}}</strong>
+            <div>
+                users: <br>
+                {% for user in inf.2 %}
+                    {{user}} <br> <!--{{user.username}}-->
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+    {% endfor %}
+
+{% endblock %}

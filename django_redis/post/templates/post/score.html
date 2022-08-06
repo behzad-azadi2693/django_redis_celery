@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+    <p>your score in system: <strong>{{ me_score }}</strong></p>
+
+    {% for user in all_users_score %}
+    {{ forloop.counter }}.user: <strong>{{ user.0 }}</strong> has <strong>{{ user.1 }}</strong> score <br>
+    {% endfor %}
+{% endblock %}
